@@ -16,7 +16,6 @@ void log(const std::string& message) {
 
 int main() {
     try {
-        log("Starting IP allocation program");
         
         {
             log("Creating IP pool 1 (192.168.1.1-100)");
