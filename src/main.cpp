@@ -11,13 +11,21 @@ int main() {
         
         // Explicit save if needed
         manager.take_snapshot();
-    } // Auto-save happens here
+    } 
     
     // New instance will restore previous state
     IPManager manager2("192.168.1.0/24");
     if (manager2.is_allocated("192.168.1.1")) {
         std::cout << "IP 192.168.1.1 is already allocated" << std::endl;
     }
+
+    IPManager manager3("192.168.1.0/24");
+    
+    // Allocated random IP address, from the pool.
+    auto ip2 = manager3.allocate_ip();
+    std::cout << "Allocated IP:" << ip2 << std::endl;
+
+    manager3.take_snapshot();
     
     return 0;
 }
