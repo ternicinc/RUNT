@@ -10,14 +10,19 @@
 IPManager::IPManager(const std::string& subnet, const std::string& snapshot_dir)
     : subnet_(subnet), snapshot_dir_(snapshot_dir) {
     
+    log("Initializing IPManager for subnet: " + subnet);
+    
     // Ensure snapshot directory exists
     if (mkdir(snapshot_dir_.c_str(), 0755) != 0 && errno != EEXIST) {
+        log("Failed to create snapshot directory: " + snapshot_dir_);
         throw IPAllocationError("Failed to create snapshot directory");
     }
     
+    log("Snapshot directory ready: " + snapshot_dir_);
     initialize_available_ips();
     restore_snapshot();
 }
+
 
 IPManager::~IPManager() {
     take_snapshot();
@@ -49,16 +54,19 @@ void IPManager::take_snapshot() const {
 
 std::string IPManager::allocate_ip() {
     if (available_ips_.empty()) {
+        log("No available IP addresses in pool");
         throw IPAllocationError("No available IP addresses in pool");
     }
     
-    // Since we're using a set sorted lexicographically, the first IP will be the lowest
     std::set<std::string>::iterator it = available_ips_.begin();
     std::string ip = *it;
     available_ips_.erase(it);
     allocated_ips_.insert(ip);
+    
+    log("Allocated IP: " + ip + " (Remaining: " + std::to_string(available_ips_.size()) + ")");
     return ip;
 }
+
 
 
 void IPManager::restore_snapshot() {
@@ -132,54 +140,62 @@ std::vector<std::string> IPManager::get_available_ips() const {
 }
 
 void IPManager::initialize_available_ips() {
-    // Clear existing IPs
+    log("Initializing available IPs for subnet: " + subnet_);
+    
     available_ips_.clear();
     
-    // Parse subnet to get base IP and range
     size_t last_dot = subnet_.rfind('.');
     if (last_dot == std::string::npos) {
+        log("Invalid subnet format: " + subnet_);
         throw IPAllocationError("Invalid subnet format");
     }
     
     std::string base_ip = subnet_.substr(0, last_dot + 1);
-    int pool_start = 1;  // Default start
-    int pool_end = 254;  // Default end
+    int pool_start = 1;
+    int pool_end = 254;
     
-    // If subnet has range specified (e.g., "192.168.1.10-200")
     size_t dash_pos = subnet_.find('-');
     if (dash_pos != std::string::npos) {
         try {
             pool_start = std::stoi(subnet_.substr(last_dot + 1, dash_pos - last_dot - 1));
             pool_end = std::stoi(subnet_.substr(dash_pos + 1));
+            log("Custom IP range detected: " + std::to_string(pool_start) + "-" + std::to_string(pool_end));
         } catch (...) {
+            log("Invalid IP range in subnet: " + subnet_);
             throw IPAllocationError("Invalid IP range in subnet");
         }
     } else {
-        // Handle case where just the base IP is given
         try {
             pool_start = 1;
             pool_end = std::stoi(subnet_.substr(last_dot + 1));
+            log("Default IP range: 1-" + std::to_string(pool_end));
         } catch (...) {
+            log("Invalid subnet format: " + subnet_);
             throw IPAllocationError("Invalid subnet format");
         }
     }
     
-    // Validate range
     if (pool_start < 1 || pool_end > 254 || pool_start > pool_end) {
+        log("Invalid IP range: " + std::to_string(pool_start) + "-" + std::to_string(pool_end));
         throw IPAllocationError("Invalid IP range");
     }
     
-    // Populate available IPs in order
+    log("Populating available IPs from " + base_ip + std::to_string(pool_start) + 
+        " to " + base_ip + std::to_string(pool_end));
+    
     for (int i = pool_start; i <= pool_end; i++) {
         std::ostringstream oss;
         oss << base_ip << i;
         available_ips_.insert(oss.str());
     }
     
-    // Remove any that were allocated in a previous session
+    log("Initialized " + std::to_string(available_ips_.size()) + " available IPs");
+    
     for (const auto& ip : allocated_ips_) {
         available_ips_.erase(ip);
     }
+    
+    log("After removing allocated IPs, " + std::to_string(available_ips_.size()) + " remain available");
 }
 
 bool IPManager::is_valid_ip(const std::string& ip) const {

@@ -6,6 +6,8 @@
 #include <vector>
 #include <stdexcept>
 #include <chrono>
+#include <iostream>
+#include <iomanip>
 
 class IPAllocationError : public std::runtime_error {
 public:
@@ -43,6 +45,18 @@ private:
     std::string get_snapshot_path() const {
         return snapshot_dir_ + "/ip_snapshot.dat";
     }
+    void log(const std::string& message) const {
+        auto now = std::chrono::system_clock::now();
+        auto now_time = std::chrono::system_clock::to_time_t(now);
+        auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+            now.time_since_epoch()) % 1000;
+
+        std::cout << "[IPManager][" << subnet_ << "][" 
+                  << std::put_time(std::localtime(&now_time), "%H:%M:%S")
+                  << "." << std::setfill('0') << std::setw(3) << now_ms.count() << "] "
+                  << message << std::endl;
+    }
 };
+
 
 #endif // IP_MANAGER_HPP

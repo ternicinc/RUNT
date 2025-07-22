@@ -3,7 +3,6 @@
 #include <iomanip>
 #include "ip_manager.hpp"
 
-// Simple logging function with timestamp
 void log(const std::string& message) {
     auto now = std::chrono::system_clock::now();
     auto now_time = std::chrono::system_clock::to_time_t(now);
@@ -51,6 +50,5 @@ int main() {
         return 2;
     }
 
-    log("Program completed successfully");
     return 0;
 }
