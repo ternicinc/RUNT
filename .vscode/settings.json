@@ -54,6 +54,7 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "vector": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "map": "cpp"
     }
 }

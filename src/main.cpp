@@ -3,6 +3,7 @@
 #include <iomanip>
 #include "ip_manager.hpp"
 
+
 void log(const std::string& message) {
     auto now = std::chrono::system_clock::now();
     auto now_time = std::chrono::system_clock::to_time_t(now);
