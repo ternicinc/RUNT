@@ -1,6 +1,6 @@
 # Compiler settings
 CXX = g++
-CXXFLAGS = -Wall -Wextra -g -I./include
+CXXFLAGS = -Wall -Wextra -g -I./include -std=c++11
 LDFLAGS = 
 
 # Project name
@@ -17,6 +17,7 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
+# Pattern rule for .cpp files
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
