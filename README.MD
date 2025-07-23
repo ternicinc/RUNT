@@ -19,39 +19,35 @@ flowchart TB
     end
 ```
 
-```pie
-    title Implementation Progress
-    "Completed" : 45
-    "In Progress" : 30
-    "Planned" : 25
+# Implementation Progress
+
+```mermaid
+flowchart LR
+    subgraph Progress["Implementation Progress"]
+        direction TB
+        Completed[Completed 2%] --> InProgress[In Progress 98%]
+        InProgress --> Planned[Planned 0%]
+    end
 ```
 
-```mindmap
-  root((Requirements))
-    Hardware
-      x86_64
-      VT-x/AMD-v
-      Minimum 8GB RAM
-    Software
-      Linux Kernel 5.15+
-      Python 3.10+
-      QEMU 6.2+
+# Technology Support
+
+```mermaid
+flowchart LR
+    Hypervisors[Hypervisor Support] --> KVM
+    Hypervisors --> LXC
+    Storage[Storage Backends] --> LVM
+    Storage --> CEPH
+    Storage --> NFS
 ```
 
-```graph LR
-    A[Multi-Hypervisor] --> B((KVM))
-    A --> C((LXC))
-    D[Storage Backends] --> E((LVM))
-    D --> F((CEPH))
-    D --> G((NFS))
-```
+# API Sequence Flow
 
-```sequenceDiagram
-    participant Client
-    participant API
-    participant Hypervisor
-    Client->>API: POST /vm/create
-    API->>Hypervisor: Provision VM
-    Hypervisor-->>API: VM ID
-    API-->>Client: 201 Created
+
+```mermaid
+flowchart LR
+    Client -->|POST /vm/create| API
+    API -->|Provision VM| Hypervisor
+    Hypervisor -->|VM ID| API
+    API -->|201 Created| Client
 ```
