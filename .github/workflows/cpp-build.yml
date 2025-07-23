@@ -32,7 +32,7 @@ jobs:
       # (Optional) Upload the built binary as an artifact
       - name: Upload build artifact
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: vps_srv-binary
           path: vps_srv
