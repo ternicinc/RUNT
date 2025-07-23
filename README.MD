@@ -1,5 +1,7 @@
 # RUNT V - Ternic Virtualization Management System
 
+# RUNT V - Ternic Virtualization Management System
+
 ## Architecture Overview
 ```mermaid
 flowchart TB
@@ -27,6 +29,8 @@ flowchart LR
         direction TB
         Completed[Completed 2%] --> InProgress[In Progress 98%]
         InProgress --> Planned[Planned 0%]
+        Completed[Completed 45%] --> InProgress[In Progress 30%]
+        InProgress --> Planned[Planned 25%]
     end
 ```
 
