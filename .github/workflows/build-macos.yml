@@ -1,4 +1,4 @@
-name: C++11 Build (macOS)
+name: C++11 Build (macOS Intel)
 
 on:
   push:
@@ -7,23 +7,22 @@ on:
     branches: ["main"]
 
 jobs:
-  build-macos:
-    runs-on: macos-latest  # Uses macOS 14 (Sonoma) with Xcode 15
+  build-macos-intel:
+    runs-on: macos-13  # macOS Ventura (last version with Intel support)
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "10.15"  # Optional: Set min macOS version
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install dependencies (if needed)
+      - name: Build for Intel (x86_64)
         run: |
-          brew update
-          brew install make  # Usually pre-installed on macOS runners
+          # Explicitly compile for x86_64
+          make CXX="clang++ -target x86_64-apple-macos10.15"
 
-      - name: Build with Make
-        run: make
-
-      - name: Upload artifact
+      - name: Upload Intel binary
         uses: actions/upload-artifact@v4
         with:
-          name: vps_srv-macos
+          name: vps_srv-macos-intel
           path: vps_srv
