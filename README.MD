@@ -1,109 +1,53 @@
 # RUNT V - Ternic Virtualization Management System
 
-# Repository Overview
+## Architecture Overview
+```mermaid
+flowchart TB
+    subgraph Control Plane
+        A[API Gateway] --> B[RUNT Core]
+        B --> C[Resource Manager]
+        C --> D[IP Manager]
+        C --> E[Storage Manager]
+    end
+    
+    subgraph Data Plane
+        B --> F[Hypervisor Abstraction]
+        F --> G[KVM Driver]
+        F --> H[LXC Driver]
+        G --> I[KVM Nodes]
+        H --> J[LXC Nodes]
+    end
 
-This repository contains the source code for Ternic RUNT, a virtualization management platform. The system provides core virtualization management capabilities with support for multiple virtualization technologies.
+pie
+    title Implementation Progress
+    "Completed" : 45
+    "In Progress" : 30
+    "Planned" : 25
 
-# Current Implementation Status
-
-The repository currently contains:
-
-Basic architectural framework
-
-Demo IP management module
-
-Partial implementation of storage management subsystem (incomplete)
-
-# Supported Virtualization Technologies
-
-RUNT V supports the following virtualization backends:
-
-Kernel-based Virtual Machine (KVM)
-
-Linux Containers (LXC)
-
-# Architecture Components
-
-The system architecture includes:
-
-Core virtualization management engine
-
-Network management subsystem
-
-Storage management subsystem
-
-Hypervisor abstraction layer
-
-
-# RUNT V - Ternic Virtualization Management System
-
-graph TD
-    A[RUNT Core] --> B[Hypervisor Abstraction Layer]
-    B --> C[KVM Driver]
-    B --> D[LXC Driver]
-    A --> E[Resource Management]
-    E --> F[IP Manager]
-    E --> G[Storage Manager]
-    A --> H[API Gateway]
+mindmap
+  root((Requirements))
+    Hardware
+      x86_64
+      VT-x/AMD-v
+      Minimum 8GB RAM
+    Software
+      Linux Kernel 5.15+
+      Python 3.10+
+      QEMU 6.2+
 
 
-# System Architecture
+graph LR
+    A[Multi-Hypervisor] --> B((KVM))
+    A --> C((LXC))
+    D[Storage Backends] --> E((LVM))
+    D --> F((CEPH))
+    D --> G((NFS))
 
-+-----------------------+
-|      Client Tools     |
-+-----------------------+
-           ↓
-+-----------------------+
-|    REST API Layer     |
-| (HTTP/JSON over TLS)  |
-+-----------------------+
-           ↓
-+-----------------------+
-|      Core Engine      |
-|-----------------------|
-| - VM Lifecycle        |
-| - Resource Allocation |
-| - Scheduling          |
-+-----------------------+
-           ↓
-+-----------------------+
-|  Driver Abstraction   |
-|-----------------------|
-| - KVM (libvirt)       |
-| - LXC (lxc-api)       |
-+-----------------------+
-
-# Component Relationships
-
-flowchart LR
-    Network[Network Manager] -->|allocates| IP[IP Pool]
-    Storage[Storage Manager] -->|provisions| Volumes[Storage Volumes]
-    Scheduler -->|deploys to| Hypervisors[KVM/LXC Nodes]
-
-# Supported Technologies
-
-┌───────────────┬─────────────────────────────┐
-│ Technology    │ Required Packages           │
-├───────────────┼─────────────────────────────┤
-│ KVM           │ libvirt 8.0+, qemu 6.2+     │
-│ LXC           │ lxc-api 5.0+, cgroups v2    │
-└───────────────┴─────────────────────────────┘
-
-# Storage Backends
-
-STORAGE ARCHITECTURE:
-+---------------+
-| RUNT Volume   |
-| Manager       |
-+-------┬-------+
-        ↓
-+---------------+
-| Storage Plugin│
-| Interface     |
-+-------┬-------+
-        ↓
-┌───────┴───────┐
-│ LVM Plugin    │
-│ Ceph Plugin   │
-│ NFS Plugin    │
-└───────────────┘
+sequenceDiagram
+    participant Client
+    participant API
+    participant Hypervisor
+    Client->>API: POST /vm/create
+    API->>Hypervisor: Provision VM
+    Hypervisor-->>API: VM ID
+    API-->>Client: 201 Created
