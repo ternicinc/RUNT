@@ -17,14 +17,16 @@ flowchart TB
         G --> I[KVM Nodes]
         H --> J[LXC Nodes]
     end
+```
 
-pie
+```pie
     title Implementation Progress
     "Completed" : 45
     "In Progress" : 30
     "Planned" : 25
+````
 
-mindmap
+```mindmap
   root((Requirements))
     Hardware
       x86_64
@@ -34,16 +36,17 @@ mindmap
       Linux Kernel 5.15+
       Python 3.10+
       QEMU 6.2+
+```
 
-
-graph LR
+```graph LR
     A[Multi-Hypervisor] --> B((KVM))
     A --> C((LXC))
     D[Storage Backends] --> E((LVM))
     D --> F((CEPH))
     D --> G((NFS))
+````
 
-sequenceDiagram
+```sequenceDiagram
     participant Client
     participant API
     participant Hypervisor
@@ -51,3 +54,4 @@ sequenceDiagram
     API->>Hypervisor: Provision VM
     Hypervisor-->>API: VM ID
     API-->>Client: 201 Created
+```
