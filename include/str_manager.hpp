@@ -19,8 +19,8 @@ public:
     explicit StorageManager(const std::string& pool, const std::string& storage_dir = "./storage_data");
     ~StorageManager();
 
-    std::string allocate_str();
-    void deallocate_str(const std::string& part_name);
+    std::string allocate_part();
+    void deallocate_part(const std::string& part_name);
     bool is_allocated(const std::string& part_name) const;
 
     std::vector<std::string> get_allocated_parts() const;
@@ -33,16 +33,16 @@ public:
 
 private:
     std::string pool_;
-    std::string storage_dir;
-    std::set<std::string> allocated_parts;
-    std::set<std::string> available_parts;
+    std::string storage_dir_;
+    std::set<std::string> allocated_parts_;
+    std::set<std::string> available_parts_;
 
     void initialize_available_parts();
     bool is_valid_part(const std::string& part_name) const;
     bool is_in_pool(const std::string& part_name) const;
 
     std::string get_storage_path() const {
-        return storage_dir + "/backups";
+        return storage_dir_ + "/backups";
     }
     void log(const std::string& message) const {
         auto now = std::chrono::system_clock::now();
