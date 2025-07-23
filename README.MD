@@ -24,7 +24,7 @@ flowchart TB
     "Completed" : 45
     "In Progress" : 30
     "Planned" : 25
-````
+```
 
 ```mindmap
   root((Requirements))
@@ -44,7 +44,7 @@ flowchart TB
     D[Storage Backends] --> E((LVM))
     D --> F((CEPH))
     D --> G((NFS))
-````
+```
 
 ```sequenceDiagram
     participant Client
