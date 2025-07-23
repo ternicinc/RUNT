@@ -1,0 +1,29 @@
+name: C++11 Build (macOS)
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-macos:
+    runs-on: macos-latest  # Uses macOS 14 (Sonoma) with Xcode 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (if needed)
+        run: |
+          brew update
+          brew install make  # Usually pre-installed on macOS runners
+
+      - name: Build with Make
+        run: make
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vps_srv-macos
+          path: vps_srv
