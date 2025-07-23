@@ -1,7 +1,5 @@
 # RUNT V - Ternic Virtualization Management System
 
-# RUNT V - Ternic Virtualization Management System
-
 ## Architecture Overview
 ```mermaid
 flowchart TB
