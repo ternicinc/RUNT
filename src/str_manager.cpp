@@ -1,4 +1,4 @@
-#include "str_manager.hpp"
+#include "../include/str_manager.hpp"
 #include <fstream>
 #include <sstream>
 #include <iomanip>
